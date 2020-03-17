@@ -203,7 +203,7 @@ MAXTEMP = 32
 
 
 #time.sleep(5)
-#host_ip = subprocess.getoutput("hostname -I")
+host_ip = subprocess.getoutput("hostname -I")
 #print(host_ip)
 
 running=True
@@ -254,6 +254,10 @@ while (running):
     #read the pixels
     spxls = sensor.pixels
     temp=sensor.temperature   
+
+    tFile = open('/sys/class/thermal/thermal_zone0/temp')
+    cputemp = float(tFile.read())
+    cputempC = cputemp/1000
     
     #for row in spxls:
         # Pad to 1 decimal place
@@ -326,19 +330,26 @@ while (running):
     #text.blit(text_surface, (10,400))
     textOverlay(a_string,(160,420))
 
-    a_string = "Min: {0:.0f} C".format(mintemp)
+    a_string = "CPU: {0:.1f}\N{DEGREE SIGN}C".format(cputempC)
+    textOverlay(a_string,(160,440))
+
+    a_string = "IP: " + host_ip
+    if  a_string != "IP: " : 
+      textOverlay(a_string,(160,460))
+
+    a_string = "Min: {0:.0f}\N{DEGREE SIGN}C".format(mintemp)
     #text_surface = font.render(words, True, 
     #   colors[0])
     #text.blit(text_surface, (10,20))
     textOverlay(a_string,(80,30),colors[0])
 
-    a_string = "Max: {0:.0f} C".format(maxtemp)
+    a_string = "Max: {0:.0f}\N{DEGREE SIGN}C".format(maxtemp)
     #text_surface = font.render(words, True,
     #   colors[COLORDEPTH-1])
     #text.blit(text_surface, (180,20))
     textOverlay(a_string,(240,30),colors[COLORDEPTH-1])
 
-    a_string = "Sensor:{0:.1f}C".format(temp)
+    a_string = "Snsr: {0:.1f}\N{DEGREE SIGN}C".format(temp)
     #text_surface = font.render(words, True, BLUE) 
     #text.blit(text_surface, (10,50))
     textOverlay(a_string,(80,60))
@@ -361,9 +372,11 @@ while (running):
         rate = 10/( end_time - start_time)
         #print("{0:.1f} frames/sec ".format(rate))
 
-        fr_string = "{0:.1f} fms/s".format(rate)
+        fr_string = "{0:.1f} Frms/s".format(rate)
         #text_surface = font.render(a_string, True, BLUE)
         #data.blit(text_surface, (200,50))
+
+        host_ip = subprocess.getoutput("hostname -I")
         loopcount = 0
         start_time = time.time()
 
