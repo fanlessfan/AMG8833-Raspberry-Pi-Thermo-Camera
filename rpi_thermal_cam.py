@@ -179,7 +179,7 @@ menuDisplay = False
 # heatDisplay == 1	heat + camera
 # heatDisplay == 2	heat + +data + camera
 # heatDisplay == 3	heat + data
-heatDisplay = 1
+heatDisplay = 2
 
 imageCapture = False
 systemHalt = False
@@ -414,9 +414,11 @@ pygame.quit()
 
 if systemHalt:
     print("System Halt now")
+    subprocess.getoutput("/home/pi/lcdoff")
     subprocess.getoutput("sudo shutdown -h -t 0")
 
 if systemReboot:
     print("System Rebooting now")
+    subprocess.getoutput("/home/pi/lcdoff")
     subprocess.getoutput("sudo shutdown -r -t 0")
 
